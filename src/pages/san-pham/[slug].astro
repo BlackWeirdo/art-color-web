@@ -1,0 +1,50 @@
+---
+import MainLayout from "../../layouts/MainLayout.astro";
+import ProductSchema from "../../components/ProductSchema.astro";
+import Hero from "../../components/sections/Hero.astro";
+import Features from "../../components/sections/Features.astro";
+import Specs from "../../components/sections/Specs.astro";
+import VideoDemo from "../../components/sections/VideoDemo.astro";
+import ContactInfo from "../../components/sections/ContactInfo.astro";
+import Partners from "../../components/sections/Partners.astro";
+import StickyMobileCTA from "../../components/sections/StickyMobileCTA.astro";
+import { products, type Product } from "../../data/product.ts";
+
+export function getStaticPaths() {
+  return products.map((p) => ({
+    params: { slug: p.slug },
+    props: { product: p },
+  }));
+}
+
+interface Props {
+  product: Product;
+}
+const { product } = Astro.props;
+
+const title = `${product.name} | ${product.brand}`;
+const canonical = new URL(`/san-pham/${product.slug}/`, Astro.site ?? "https://example.com").toString();
+---
+
+<MainLayout title={title} description={product.tagline}>
+  <ProductSchema
+    slot="head"
+    name={product.name}
+    image={product.images}
+    description={product.description}
+    brand={product.brand}
+    sku={product.sku}
+    price={product.priceVnd}
+    priceCurrency="VND"
+    availability="InStock"
+    url={canonical}
+  />
+
+  <Hero product={product} />
+  <Features product={product} />
+  <Specs product={product} />
+  <VideoDemo product={product} />
+  <ContactInfo />
+  <Partners />
+  <StickyMobileCTA product={product} />
+</MainLayout>

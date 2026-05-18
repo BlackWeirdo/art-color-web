@@ -1,0 +1,49 @@
+---
+interface Props {
+  name: string;
+  image: string[];
+  description: string;
+  brand: string;
+  sku?: string;
+  price?: number;
+  priceCurrency?: string;
+  availability?: 'InStock' | 'OutOfStock' | 'PreOrder';
+  url: string;
+}
+
+const {
+  name,
+  image,
+  description,
+  brand,
+  sku,
+  price,
+  priceCurrency = 'VND',
+  availability = 'InStock',
+  url,
+} = Astro.props;
+
+const schema: Record<string, unknown> = {
+  '@context': 'https://schema.org/',
+  '@type': 'Product',
+  name,
+  image,
+  description,
+  brand: { '@type': 'Brand', name: brand },
+};
+
+if (sku) schema.sku = sku;
+
+// Only emit offer if real price is provided (>0). Avoid fake/placeholder data.
+if (price && price > 0) {
+  schema.offers = {
+    '@type': 'Offer',
+    price,
+    priceCurrency,
+    availability: `https://schema.org/${availability}`,
+    url,
+  };
+}
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(schema)} />
