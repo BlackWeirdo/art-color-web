@@ -1,0 +1,230 @@
+@import "tailwindcss";
+
+@variant dark (&:where(.dark, .dark *));
+
+/* ============================================================
+ * Theme tokens — Black + Yellow industrial palette
+ * Generic dark + safety-yellow accent (not tied to any brand).
+ * Hue 80–95 = warm/yellow range; 240 = blue-gray (unused now).
+ * ============================================================ */
+@theme {
+  --color-bg: oklch(0.13 0.006 80);
+  --color-fg: oklch(0.97 0.005 80);
+  --color-card: oklch(0.18 0.008 80);
+  --color-border: oklch(0.30 0.012 80);
+  --color-muted: oklch(0.68 0.012 80);
+  --color-accent: oklch(0.88 0.18 95);
+  --color-accent-fg: oklch(0.14 0.012 80);
+
+  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-display: "Inter", system-ui, sans-serif;
+  --font-serif: "Lora", "Source Serif Pro", Georgia, "Times New Roman", serif;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+/* Light theme: white surface + golden accent (softer yellow for contrast on white) */
+:root.light {
+  color-scheme: light;
+  --color-bg: oklch(0.99 0.003 80);
+  --color-fg: oklch(0.16 0.012 80);
+  --color-card: oklch(0.96 0.005 80);
+  --color-border: oklch(0.88 0.012 80);
+  --color-muted: oklch(0.45 0.012 80);
+  --color-accent: oklch(0.74 0.19 88);
+  --color-accent-fg: oklch(0.14 0.012 80);
+}
+
+html {
+  background: var(--color-bg);
+  color: var(--color-fg);
+  font-family: var(--font-sans);
+  scroll-behavior: smooth;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+section {
+  scroll-margin-top: 80px;
+}
+
+/* ---- Anti-FOUC for JS-driven animations -------------------------------- */
+.js [data-reveal],
+.js [data-stagger-item],
+.js [data-hero-meta],
+.js [data-hero-gallery],
+.js [data-hero-title],
+.js [data-hero-tagline],
+.js [data-hero-price],
+.js [data-feature-image],
+.js [data-feature-content] {
+  opacity: 0;
+}
+.js [data-reveal] { transform: translateY(24px); }
+.js [data-stagger-item] { transform: translateY(22px); }
+.js [data-hero-meta] { transform: translateY(-8px); }
+.js [data-hero-title],
+.js [data-hero-tagline],
+.js [data-hero-price] { transform: translateY(16px); }
+.js [data-hero-gallery] { transform: scale(0.97); }
+/* feature-image/content initial transform is set inline by JS (depends on row index parity) */
+
+/* Reduced-motion fallback: never keep elements hidden */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+  .js [data-reveal],
+  .js [data-stagger-item],
+  .js [data-hero-meta],
+  .js [data-hero-gallery],
+  .js [data-hero-title],
+  .js [data-hero-tagline],
+  .js [data-hero-price],
+  .js [data-feature-image],
+  .js [data-feature-content] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* ---- Sticky header ----------------------------------------------------- */
+header[data-header] {
+  transition: background-color 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+header[data-header].scrolled {
+  background-color: color-mix(in oklch, var(--color-bg) 92%, transparent);
+  box-shadow: 0 1px 14px rgba(0, 0, 0, 0.45);
+}
+:root.light header[data-header].scrolled {
+  box-shadow: 0 1px 14px rgba(0, 0, 0, 0.08);
+}
+
+[data-mobile-menu] {
+  overflow: hidden;
+}
+
+/* ---- Native UI tweaks --------------------------------------------------- */
+summary::-webkit-details-marker { display: none; }
+summary { list-style: none; }
+
+[data-gallery-carousel]::-webkit-scrollbar { display: none; }
+[data-gallery-carousel] { scrollbar-width: none; }
+
+/* ---- Micro-interactions: press feedback -------------------------------- */
+.btn-press {
+  transition: transform 0.15s ease, opacity 0.2s ease, background-color 0.2s ease;
+}
+.btn-press:active {
+  transform: scale(0.96);
+}
+
+/* Card hover lift with yellow glow */
+.card-lift {
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+.card-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px -10px color-mix(in oklch, var(--color-accent) 50%, transparent);
+}
+
+/* Nav link underline from-left */
+.nav-link {
+  position: relative;
+}
+.nav-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  height: 2px;
+  width: 0%;
+  background-color: var(--color-accent);
+  transition: width 0.25s ease;
+}
+.nav-link:hover::after,
+.nav-link:focus-visible::after {
+  width: 100%;
+}
+
+/* Gallery thumbs zoom-on-hover */
+[data-gallery-thumb] img {
+  transition: transform 0.3s ease;
+}
+[data-gallery-thumb]:hover img {
+  transform: scale(1.08);
+}
+
+/* Social/icon hover scale */
+.icon-hover {
+  transition: transform 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+.icon-hover:hover {
+  transform: scale(1.08) rotate(-2deg);
+}
+
+/* Theme toggle: prevent layout shift while rotating */
+[data-theme-toggle] {
+  transform-origin: center;
+}
+
+/* ---- Partners section — cream "light island" + yellow highlighter band -- */
+/* Local theme override: always cream bg / dark text / golden accent regardless
+ * of page theme — matches the reference image style exactly. */
+#partners {
+  --color-bg: oklch(0.97 0.012 88);
+  --color-fg: oklch(0.13 0.012 80);
+  --color-accent: oklch(0.83 0.18 92);
+  --color-muted: oklch(0.42 0.012 80);
+  --color-border: oklch(0.84 0.012 80);
+  background: var(--color-bg);
+  color: var(--color-fg);
+}
+
+/* Black text with thick yellow outline that hugs each letter's contour.
+ * -webkit-text-stroke draws a stroke along the letter path. Combined with
+ * paint-order: stroke fill, the fill (black) paints on top of the stroke,
+ * leaving only the OUTSIDE half of the stroke visible → looks like a border
+ * around the letterform, with the letter staying its natural width. */
+.partner-category {
+  color: #000;
+  letter-spacing: -0.02em;
+  line-height: 1.12;
+  -webkit-text-stroke: 6px var(--color-accent);
+  paint-order: stroke fill;
+}
+
+@media (max-width: 767px) {
+  .partner-category {
+    -webkit-text-stroke-width: 4px;
+  }
+}
+
+/* Span wrapper per line: just inline-block neutral, no gradient anymore */
+.partner-category > .line {
+  display: inline-block;
+}
+
+.partner-item {
+  transition: transform 0.2s ease;
+}
+.partner-item:hover {
+  transform: translateY(-2px);
+}
+
+/* ---- Feature scroll sections ------------------------------------------- */
+/* Large editorial numeral on each row */
+.feature-numeral {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.05em;
+  background: linear-gradient(180deg,
+    color-mix(in oklch, var(--color-accent) 70%, transparent) 0%,
+    color-mix(in oklch, var(--color-accent) 10%, transparent) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  line-height: 0.85;
+}
