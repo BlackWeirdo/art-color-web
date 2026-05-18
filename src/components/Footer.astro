@@ -1,0 +1,112 @@
+---
+import { products } from "../data/product.ts";
+const product = products[0]!;
+import { contact } from "../data/contact.ts";
+
+const year = new Date().getFullYear();
+
+const columns = [
+  {
+    title: 'Sản phẩm',
+    links: [
+      { label: 'Tổng quan', href: '#hero' },
+      { label: 'Tính năng', href: '#features' },
+      { label: 'Thông số kỹ thuật', href: '#specs' },
+      { label: 'Video demo', href: '#video' },
+    ],
+  },
+  {
+    title: 'Hỗ trợ',
+    links: [
+      { label: 'Tư vấn', href: '#contact' },
+      { label: 'Bảo hành', href: '#' },
+      { label: 'Vận chuyển', href: '#' },
+      { label: 'Câu hỏi thường gặp', href: '#' },
+    ],
+  },
+  {
+    title: 'Công ty',
+    links: [
+      { label: 'Về chúng tôi', href: '#' },
+      { label: 'Showroom', href: '#' },
+      { label: 'Tin tức', href: '#' },
+      { label: 'Tuyển dụng', href: '#' },
+    ],
+  },
+];
+---
+
+<footer class="mt-24 border-t border-[--color-border] bg-[--color-card]/40">
+  <div class="max-w-7xl mx-auto px-4 md:px-8 py-12 md:py-16">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+      <div>
+        <div class="flex items-center gap-2.5">
+          <img
+            src="/logos/art-color.png"
+            alt=""
+            class="h-8 w-auto"
+            onerror="this.style.display='none'"
+          />
+          <p class="font-bold text-lg">{product.brand}</p>
+        </div>
+        <p class="mt-3 text-sm text-[--color-muted] leading-relaxed">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+        </p>
+        <p class="mt-4 text-sm text-[--color-muted]">
+          <span class="block">{contact.address}</span>
+          <a href={`mailto:${contact.email}`} class="block mt-2 hover:text-[--color-accent] transition-colors">
+            {contact.email}
+          </a>
+          <a href={`tel:${contact.phone.replace(/\s/g, '')}`} class="block hover:text-[--color-accent] transition-colors">
+            {contact.phone}
+          </a>
+        </p>
+      </div>
+
+      {columns.map((col) => (
+        <div>
+          <p class="font-semibold text-sm uppercase tracking-wider text-[--color-muted]">{col.title}</p>
+          <ul class="mt-4 space-y-2">
+            {col.links.map((link) => (
+              <li>
+                <a href={link.href} class="text-sm hover:text-[--color-accent] transition-colors">
+                  {link.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+
+    <div class="mt-12 pt-6 border-t border-[--color-border] flex flex-col gap-6">
+      <div class="flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
+        <div class="flex items-center gap-3">
+          <span class="text-xs uppercase tracking-wider text-[--color-muted]">Đối tác phân phối</span>
+          <img
+            src="/logos/technogym.png"
+            alt="Technogym"
+            class="h-7 w-auto opacity-90"
+            onerror="this.style.display='none'"
+          />
+        </div>
+        <div class="flex gap-3">
+          {contact.socials.map((s) => (
+            <a
+              href={s.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={s.name}
+              class="icon-hover w-9 h-9 grid place-items-center rounded-full border border-[--color-border] hover:border-[--color-accent] hover:text-[--color-accent]"
+            >
+              <Fragment set:html={s.icon} />
+            </a>
+          ))}
+        </div>
+      </div>
+      <p class="text-xs text-[--color-muted]">
+        © {year} {product.brand}. Mọi quyền được bảo lưu.
+      </p>
+    </div>
+  </div>
+</footer>

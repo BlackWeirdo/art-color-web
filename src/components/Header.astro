@@ -1,0 +1,173 @@
+---
+import { products } from "../data/product.ts";
+import ThemeToggle from "./ThemeToggle.astro";
+
+interface Props {
+  /** 'home' = catalog-style nav, 'product' = section anchors */
+  variant?: 'home' | 'product';
+}
+const { variant = 'product' } = Astro.props;
+
+const brand = products[0]?.brand ?? 'Art Color';
+
+// Nav anchors are page-relative — they only resolve to sections that exist on
+// the current page. Home page surfaces Đối tác + Liên hệ, product pages surface
+// the full product anatomy (Tổng quan / Tính năng / Thông số / Video / Liên hệ).
+const sectionLinks = variant === 'home'
+  ? [
+      { label: 'Đối tác', href: '#partners' },
+      { label: 'Liên hệ', href: '#contact' },
+    ]
+  : [
+      { label: 'Tổng quan', href: '#hero' },
+      { label: 'Tính năng', href: '#features' },
+      { label: 'Thông số', href: '#specs' },
+      { label: 'Video', href: '#video' },
+      { label: 'Liên hệ', href: '#contact' },
+    ];
+---
+
+<header data-header class="sticky top-0 z-50 bg-[--color-bg]/85 backdrop-blur border-b border-[--color-border]">
+  <div class="max-w-7xl mx-auto px-4 md:px-8 h-16 flex items-center justify-between gap-4">
+    <a href="/" class="flex items-center gap-2.5 hover:opacity-90 transition-opacity" aria-label={`${brand} — về trang chủ`}>
+      <img
+        src="/logos/art-color.png"
+        alt=""
+        class="h-9 md:h-10 w-auto"
+        onerror="this.style.display='none'"
+      />
+      <span class="font-bold text-lg tracking-tight">{brand}</span>
+    </a>
+
+    <nav class="hidden md:flex items-center gap-5 lg:gap-6" aria-label="Điều hướng chính">
+      <details data-products-dropdown class="relative group">
+        <summary class="nav-link list-none cursor-pointer flex items-center gap-1 text-sm text-[--color-muted] hover:text-[--color-fg] transition-colors select-none">
+          Sản phẩm
+          <svg class="w-3.5 h-3.5 transition-transform group-open:rotate-180" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </summary>
+        <div
+          class="absolute top-full left-0 mt-3 min-w-[340px] rounded-2xl overflow-hidden p-2 z-[60] backdrop-blur-xl"
+          style="background-color: var(--color-card); border: 1px solid var(--color-border); box-shadow: 0 24px 60px -15px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.04) inset;"
+        >
+          <ul role="list" class="relative">
+            {products.map((p) => (
+              <li>
+                <a
+                  href={`/san-pham/${p.slug}/`}
+                  class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-[var(--color-accent)]/15 transition-colors group/item"
+                >
+                  <span class="flex-1">
+                    <span class="block font-semibold text-[--color-fg] group-hover/item:text-[--color-accent] transition-colors leading-tight">{p.name}</span>
+                    <span class="block text-xs text-[--color-muted] mt-1 font-mono">{p.sku}</span>
+                  </span>
+                  <svg class="w-4 h-4 shrink-0 text-[--color-muted] group-hover/item:text-[--color-accent] group-hover/item:translate-x-0.5 transition-all" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                  </svg>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </details>
+
+      {sectionLinks.map((item) => (
+        <a href={item.href} class="nav-link text-sm text-[--color-muted] hover:text-[--color-fg] transition-colors">
+          {item.label}
+        </a>
+      ))}
+    </nav>
+
+    <div class="flex items-center gap-2 sm:gap-3">
+      <div class="flex items-center gap-2 sm:gap-3">
+        <span class="text-[10px] uppercase tracking-[0.15em] text-[--color-muted] hidden lg:inline">
+          Phân phối chính hãng
+        </span>
+        <img
+          src="/logos/technogym.png"
+          alt="Technogym"
+          class="h-7 md:h-9 w-auto"
+          onerror="this.style.display='none'"
+        />
+      </div>
+      <span class="h-7 md:h-8 w-px bg-[--color-border]" aria-hidden="true"></span>
+      <ThemeToggle />
+      <button
+        type="button"
+        data-mobile-menu-toggle
+        aria-label="Mở menu"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+        class="btn-press md:hidden inline-flex items-center justify-center w-10 h-10 rounded-full border border-[--color-border] hover:border-[--color-accent] transition-colors"
+      >
+        <svg class="w-5 h-5 menu-open-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+        <svg class="w-5 h-5 menu-close-icon hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div
+    id="mobile-menu"
+    data-mobile-menu
+    class="md:hidden hidden border-t border-[--color-border]"
+    style="background-color: var(--color-bg);"
+  >
+    <nav class="flex flex-col px-4 py-2" aria-label="Điều hướng di động">
+      <details class="group/m border-b border-[--color-border]">
+        <summary class="py-3 text-sm font-medium text-[--color-fg] flex items-center justify-between cursor-pointer list-none">
+          <span>Sản phẩm</span>
+          <svg class="w-4 h-4 transition-transform group-open/m:rotate-180" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </summary>
+        <ul class="pb-3 pl-4 space-y-2">
+          {products.map((p) => (
+            <li>
+              <a href={`/san-pham/${p.slug}/`} class="block py-2 text-sm hover:text-[--color-accent] transition-colors">
+                <span class="font-semibold">{p.name}</span>
+                <span class="block text-xs text-[--color-muted] font-mono mt-0.5">{p.sku}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </details>
+
+      {sectionLinks.map((item) => (
+        <a
+          href={item.href}
+          class="py-3 text-sm text-[--color-muted] hover:text-[--color-fg] border-b border-[--color-border] last:border-b-0 transition-colors"
+        >
+          {item.label}
+        </a>
+      ))}
+    </nav>
+  </div>
+</header>
+
+<script>
+  // Close any open dropdown when clicking outside it
+  document.addEventListener('click', (event) => {
+    const target = event.target as HTMLElement | null;
+    document.querySelectorAll<HTMLDetailsElement>('details[data-products-dropdown][open]').forEach((d) => {
+      if (target && !d.contains(target)) d.removeAttribute('open');
+    });
+  });
+
+  // Close on Escape
+  document.addEventListener('keydown', (event) => {
+    if (event.key !== 'Escape') return;
+    document.querySelectorAll<HTMLDetailsElement>('details[data-products-dropdown][open]').forEach((d) => {
+      d.removeAttribute('open');
+      (d.querySelector('summary') as HTMLElement | null)?.focus();
+    });
+  });
+</script>
