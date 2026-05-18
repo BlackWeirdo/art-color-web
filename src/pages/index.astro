@@ -1,0 +1,25 @@
+---
+import MainLayout from "../layouts/MainLayout.astro";
+import HomeHero from "../components/sections/HomeHero.astro";
+import DistributedBrands from "../components/sections/DistributedBrands.astro";
+import OurServices from "../components/sections/OurServices.astro";
+import ProductsCatalog from "../components/sections/ProductsCatalog.astro";
+import Partners from "../components/sections/Partners.astro";
+import ShowroomLocation from "../components/sections/ShowroomLocation.astro";
+import ContactInfo from "../components/sections/ContactInfo.astro";
+import { products } from "../data/product.ts";
+
+const brand = products[0]?.brand ?? 'Art Color';
+const title = `${brand} · Phân phối Technogym chính hãng tại Việt Nam`;
+const description = `${brand} cung cấp thiết bị fitness Technogym cho gia đình, phòng tập và doanh nghiệp. Tư vấn lắp đặt, vận hành và bảo hành tận tâm.`;
+---
+
+<MainLayout title={title} description={description} headerVariant="home">
+  <HomeHero />
+  <DistributedBrands />
+  <OurServices />
+  <ProductsCatalog />
+  <Partners />
+  <ShowroomLocation />
+  <ContactInfo />
+</MainLayout>
