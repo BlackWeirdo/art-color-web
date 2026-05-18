@@ -1,0 +1,76 @@
+---
+import { distributedBrands } from "../../data/distributed-brands.ts";
+import { products } from "../../data/product.ts";
+
+const brand = products[0]?.brand ?? 'Art Color';
+---
+
+<section
+  id="brands"
+  data-reveal
+  class="px-4 md:px-8 py-16 md:py-24 max-w-7xl mx-auto"
+>
+  <!-- 2-col header: headline left, subhead right -->
+  <div class="grid md:grid-cols-2 gap-6 md:gap-12 lg:gap-16 items-start mb-14 md:mb-20">
+    <h2 class="font-serif text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight leading-[1.2]">
+      Thương hiệu hàng đầu thế giới,<br />
+      <em class="italic font-normal text-[--color-accent]">độc quyền tại Việt Nam.</em>
+    </h2>
+
+    <p class="md:pt-3 text-base md:text-lg text-[--color-muted] leading-relaxed">
+      {brand} là nhà phân phối chính thức và độc quyền của các thương hiệu fitness và wellness uy tín trên thế giới.
+    </p>
+  </div>
+
+  <!-- Brand logos row -->
+  <div
+    data-stagger-parent
+    class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-6 gap-y-10 md:gap-x-10 md:gap-y-12 items-center justify-items-center mb-14 md:mb-16 py-6"
+  >
+    {distributedBrands.map((b) => (
+      <div
+        data-stagger-item
+        class="distributed-brand flex items-center justify-center min-h-[60px] md:min-h-[80px] w-full px-2"
+      >
+        {b.logo ? (
+          <Fragment>
+            <img
+              src={b.logo}
+              alt={b.name}
+              loading="lazy"
+              decoding="async"
+              class="max-h-10 md:max-h-14 w-auto opacity-90 hover:opacity-100 transition-opacity"
+              onerror="this.style.display='none'; const f=this.nextElementSibling; if (f) f.classList.remove('hidden');"
+            />
+            <span class="hidden text-center text-xs md:text-sm font-medium italic text-[--color-muted] leading-tight">
+              {b.name}
+            </span>
+          </Fragment>
+        ) : (
+          <p class="text-center text-xs md:text-sm font-medium italic text-[--color-muted] leading-tight">
+            {b.name}
+          </p>
+        )}
+      </div>
+    ))}
+  </div>
+
+  <!-- CTA banner bottom-right -->
+  <div class="flex justify-center md:justify-end">
+    <div class="flex flex-col sm:flex-row items-stretch rounded-xl overflow-hidden border border-[--color-border] max-w-2xl w-full shadow-lg">
+      <p class="flex-1 px-5 py-4 sm:py-4 bg-[--color-card] text-sm md:text-base text-[--color-fg] flex items-center">
+        Tư vấn doanh nghiệp — Báo giá ưu đãi cho dự án quy mô lớn
+      </p>
+      <a
+        href="#contact"
+        class="btn-press inline-flex items-center justify-center gap-2 px-6 py-3 sm:py-4 bg-[--color-accent] text-[--color-accent-fg] font-semibold hover:opacity-90 transition-opacity whitespace-nowrap"
+      >
+        Liên hệ ngay
+        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
+      </a>
+    </div>
+  </div>
+</section>
