@@ -1,0 +1,45 @@
+---
+import type { Product } from "../../data/product.ts";
+import Gallery from "./Gallery.astro";
+import PriceCTA from "./PriceCTA.astro";
+
+interface Props {
+  product: Product;
+}
+const { product } = Astro.props;
+---
+
+<section
+  id="hero"
+  data-hero
+  class="px-4 md:px-8 pt-10 md:pt-16 pb-16 md:pb-24 max-w-7xl mx-auto"
+>
+  <div class="grid md:grid-cols-2 gap-8 lg:gap-12 items-start">
+    <div data-hero-gallery>
+      <Gallery images={product.images} alt={product.name} />
+    </div>
+
+    <div>
+      <p data-hero-meta class="text-sm uppercase tracking-wider text-[--color-muted]">
+        {product.brand} · {product.sku}
+      </p>
+      <h1 data-hero-title class="mt-3 text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-tight">
+        {product.name}
+      </h1>
+      <p data-hero-tagline class="mt-5 text-lg text-[--color-muted] leading-relaxed">
+        {product.tagline}
+      </p>
+
+      <PriceCTA
+        priceVnd={product.priceVnd}
+        priceNote={product.priceNote}
+        ctaLabel={product.ctaLabel}
+      />
+    </div>
+  </div>
+</section>
+
+<script>
+  import { initGallery } from "../../scripts/gallery.ts";
+  initGallery();
+</script>
