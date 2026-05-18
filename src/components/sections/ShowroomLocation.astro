@@ -1,0 +1,105 @@
+---
+import { contact } from "../../data/contact.ts";
+
+// Placeholder showroom info. User customizes address + Google Maps embed URL.
+const showroom = {
+  address: '123 Đường Placeholder, Quận 1, TP. Hồ Chí Minh',
+  hours: '8:00 — 21:00 mỗi ngày',
+  // Google Maps embed URL — uses query-based search (no API key required).
+  // To swap with real showroom: replace `q=` value with full address or coordinates.
+  // Example: q=10.7769,106.7009 (Saigon Notre-Dame Cathedral as placeholder).
+  mapEmbedUrl:
+    'https://maps.google.com/maps?q=10.7769%2C106.7009&t=&z=15&ie=UTF8&iwloc=&output=embed',
+};
+---
+
+<section
+  id="showroom"
+  data-reveal
+  class="px-4 md:px-8 py-16 md:py-24 max-w-7xl mx-auto"
+>
+  <div class="grid md:grid-cols-2 gap-10 lg:gap-16 items-center">
+    <!-- Left: title + paragraph + showroom info + CTA -->
+    <div>
+      <p class="text-sm uppercase tracking-[0.2em] text-[--color-accent] font-semibold">
+        Showroom
+      </p>
+      <h2 class="font-serif mt-3 text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight leading-[1.15]">
+        Trải nghiệm<br />
+        <em class="italic font-normal text-[--color-accent]">trực tiếp.</em>
+      </h2>
+      <p class="mt-6 text-base md:text-lg text-[--color-muted] leading-relaxed max-w-prose">
+        Ghé thăm showroom của chúng tôi tại trung tâm Sài Gòn — trải nghiệm, kiểm tra
+        và cảm nhận trực tiếp toàn bộ giải pháp wellness của chúng tôi.
+      </p>
+
+      <div class="mt-8 md:mt-10 space-y-5">
+        <div class="flex items-start gap-4">
+          <span class="w-10 h-10 grid place-items-center rounded-full bg-[--color-accent]/15 text-[--color-accent] shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+              <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+          </span>
+          <div>
+            <p class="text-xs uppercase tracking-wider text-[--color-muted]">Địa chỉ</p>
+            <p class="mt-1 font-semibold">{showroom.address}</p>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-4">
+          <span class="w-10 h-10 grid place-items-center rounded-full bg-[--color-accent]/15 text-[--color-accent] shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+          </span>
+          <div>
+            <p class="text-xs uppercase tracking-wider text-[--color-muted]">Giờ mở cửa</p>
+            <p class="mt-1 font-semibold">{showroom.hours}</p>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-4">
+          <span class="w-10 h-10 grid place-items-center rounded-full bg-[--color-accent]/15 text-[--color-accent] shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.72 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.35 1.85.59 2.81.72A2 2 0 0 1 22 16.92z"/>
+            </svg>
+          </span>
+          <div>
+            <p class="text-xs uppercase tracking-wider text-[--color-muted]">Hotline</p>
+            <a
+              href={`tel:${contact.phone.replace(/\s/g, '')}`}
+              class="mt-1 inline-block font-semibold hover:text-[--color-accent] transition-colors"
+            >
+              {contact.phone}
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <a
+        href="#contact"
+        class="btn-press mt-8 md:mt-10 inline-flex items-center gap-2 px-6 md:px-7 py-3.5 rounded-lg bg-[--color-accent] text-[--color-accent-fg] font-semibold hover:opacity-90 hover:gap-3 transition-all"
+      >
+        Đặt lịch tham quan
+        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
+      </a>
+    </div>
+
+    <!-- Right: interactive Google Maps embed -->
+    <div class="aspect-[4/3] md:aspect-square rounded-2xl overflow-hidden ring-1 ring-[--color-border] bg-[--color-card] shadow-xl">
+      <iframe
+        src={showroom.mapEmbedUrl}
+        class="w-full h-full border-0"
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+        title="Bản đồ showroom"
+        allowfullscreen
+      ></iframe>
+    </div>
+  </div>
+</section>

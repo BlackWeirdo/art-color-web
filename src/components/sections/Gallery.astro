@@ -1,0 +1,82 @@
+---
+interface Props {
+  images: string[];
+  alt: string;
+}
+const { images, alt } = Astro.props;
+---
+
+<!-- Desktop: vertical thumbs + main image with zoom lens + zoom panel beside -->
+<div class="hidden md:flex gap-3 items-start">
+  <div class="flex flex-col gap-2 w-20 shrink-0" role="tablist" aria-label="Ảnh sản phẩm">
+    {images.map((src, i) => (
+      <button
+        type="button"
+        data-gallery-thumb
+        data-src={src}
+        role="tab"
+        aria-selected={i === 0}
+        aria-label={`Xem ảnh ${i + 1}`}
+        class:list={[
+          "aspect-square overflow-hidden rounded-md border-2 transition-colors",
+          i === 0 ? "border-[--color-accent]" : "border-transparent",
+          "hover:border-[--color-accent]",
+        ]}
+      >
+        <img src={src} alt="" loading="lazy" class="w-full h-full object-cover" />
+      </button>
+    ))}
+  </div>
+
+  <div
+    data-gallery-zoom-wrap
+    class="relative flex-1 aspect-square overflow-hidden rounded-xl bg-[--color-card] cursor-zoom-in"
+  >
+    <img
+      data-gallery-main
+      src={images[0]}
+      alt={alt}
+      loading="eager"
+      fetchpriority="high"
+      class="w-full h-full object-cover transition-opacity duration-150"
+    />
+    <div
+      data-gallery-zoom-lens
+      class="absolute pointer-events-none hidden border-2 border-[--color-accent] bg-white/15"
+      style="width:150px;height:150px;"
+      aria-hidden="true"
+    ></div>
+  </div>
+
+  <div
+    data-gallery-zoom-panel
+    class="hidden lg:block w-[320px] h-[320px] rounded-xl overflow-hidden bg-[--color-card] bg-no-repeat shrink-0"
+    style="background-size: 200%;"
+    aria-hidden="true"
+  ></div>
+</div>
+
+<!-- Mobile: snap carousel + counter -->
+<div class="md:hidden relative">
+  <div
+    data-gallery-carousel
+    class="flex overflow-x-auto snap-x snap-mandatory gap-2 rounded-xl"
+    style="scroll-snap-type: x mandatory;"
+    aria-label="Vuốt để xem ảnh sản phẩm"
+  >
+    {images.map((src, i) => (
+      <img
+        src={src}
+        alt={i === 0 ? alt : ""}
+        loading={i === 0 ? "eager" : "lazy"}
+        fetchpriority={i === 0 ? "high" : "auto"}
+        class="shrink-0 w-full aspect-square object-cover snap-center"
+      />
+    ))}
+  </div>
+  <span
+    data-gallery-counter
+    class="absolute bottom-3 right-3 bg-black/60 text-white text-xs px-2 py-1 rounded-full"
+    aria-live="polite"
+  >1 / {images.length}</span>
+</div>

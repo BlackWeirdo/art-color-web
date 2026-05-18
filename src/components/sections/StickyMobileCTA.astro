@@ -1,0 +1,27 @@
+---
+import type { Product } from "../../data/product.ts";
+
+interface Props {
+  product: Product;
+}
+const { product } = Astro.props;
+---
+
+<div
+  data-sticky-cta
+  aria-hidden="true"
+  class="md:hidden fixed bottom-0 inset-x-0 z-40 translate-y-full bg-[--color-card] border-t border-[--color-border] p-3 shadow-2xl"
+  style="padding-bottom: max(0.75rem, env(safe-area-inset-bottom));"
+>
+  <a
+    href="#contact"
+    class="btn-press block w-full text-center py-3 rounded-lg bg-[--color-accent] text-[--color-accent-fg] font-bold"
+  >
+    {product.ctaLabel}
+  </a>
+</div>
+
+<script>
+  import { initStickyCta } from "../../scripts/stickyCta.ts";
+  initStickyCta();
+</script>
