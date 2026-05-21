@@ -1,4 +1,6 @@
 ---
+import CtaButton from "../ui/CtaButton.astro";
+
 interface Props {
   priceVnd: number;
   priceNote: string;
@@ -17,14 +19,5 @@ const formattedPrice =
   <p class="text-xs uppercase tracking-wider text-[--color-muted]">Giá tham khảo</p>
   <p class="text-3xl md:text-4xl font-bold mt-2">{formattedPrice}</p>
   <p class="mt-2 text-sm text-[--color-muted]">{priceNote}</p>
-  <a
-    href={ctaHref}
-    class="btn-press mt-6 inline-flex items-center gap-2 px-7 py-3.5 rounded-lg bg-[--color-accent] text-[--color-accent-fg] font-semibold hover:opacity-90 hover:gap-3"
-  >
-    {ctaLabel}
-    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-      <line x1="5" y1="12" x2="19" y2="12"></line>
-      <polyline points="12 5 19 12 12 19"></polyline>
-    </svg>
-  </a>
+  <CtaButton href={ctaHref} class="mt-6">{ctaLabel}</CtaButton>
 </div>

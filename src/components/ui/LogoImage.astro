@@ -1,0 +1,37 @@
+---
+/**
+ * Image with graceful fallback. If the file 404s or fails to load, hides the
+ * <img> and reveals a sibling text node containing the alt/name.
+ *
+ * Use this for partner logos, distributed-brand logos, and any image where
+ * the asset is user-supplied and might be missing.
+ *
+ * Usage:
+ *   <LogoImage src="/logos/partners/cat2-01.png" alt="Đối tác 01" />
+ *   <LogoImage src="..." alt="..." imgClass="max-h-10" fallbackClass="text-sm italic" />
+ */
+interface Props {
+  src: string;
+  alt: string;
+  /** Tailwind classes for the <img> element. */
+  imgClass?: string;
+  /** Tailwind classes for the fallback <span>. */
+  fallbackClass?: string;
+}
+const {
+  src,
+  alt,
+  imgClass = 'max-h-10 md:max-h-12 lg:max-h-14 w-auto opacity-90 hover:opacity-100 transition-opacity',
+  fallbackClass = 'text-center text-xs md:text-sm font-medium italic text-[--color-muted] leading-tight',
+} = Astro.props;
+---
+
+<img
+  src={src}
+  alt={alt}
+  loading="lazy"
+  decoding="async"
+  class={imgClass}
+  onerror="this.style.display='none'; const f=this.nextElementSibling; if (f) f.classList.remove('hidden');"
+/>
+<span class:list={['hidden', fallbackClass]}>{alt}</span>

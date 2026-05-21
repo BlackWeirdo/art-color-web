@@ -7,7 +7,7 @@ export function initStickyCta() {
   const bar = document.querySelector<HTMLElement>('[data-sticky-cta]');
   if (!hero || !bar) return;
 
-  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   let visible = false;
   let pending: Promise<unknown> | null = null;
 
@@ -16,7 +16,7 @@ export function initStickyCta() {
     visible = true;
     bar.setAttribute('aria-hidden', 'false');
 
-    if (reduced) {
+    if (prefersReducedMotion) {
       bar.style.transform = 'translateY(0)';
       return;
     }
@@ -34,7 +34,7 @@ export function initStickyCta() {
     visible = false;
     bar.setAttribute('aria-hidden', 'true');
 
-    if (reduced) {
+    if (prefersReducedMotion) {
       bar.style.transform = 'translateY(100%)';
       return;
     }

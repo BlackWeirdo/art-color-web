@@ -1,0 +1,28 @@
+---
+import Icon from './Icon.astro';
+
+/**
+ * Yellow-tinted circular badge wrapping an icon. Used in contact rows and
+ * showroom info groups.
+ *
+ * Usage:
+ *   <IconCircle icon="pin" />
+ *   <IconCircle icon="clock" size={11} />
+ */
+interface Props {
+  icon: Parameters<typeof Icon>[0]['name'];
+  /** Tailwind size token without unit (10 = w-10 h-10, 11 = w-11 h-11). */
+  size?: 10 | 11;
+}
+const { icon, size = 10 } = Astro.props;
+const sizeClass = size === 11 ? 'w-11 h-11' : 'w-10 h-10';
+---
+
+<span
+  class:list={[
+    sizeClass,
+    'grid place-items-center rounded-full bg-[--color-accent]/15 text-[--color-accent] shrink-0',
+  ]}
+>
+  <Icon name={icon} size={18} strokeWidth={1.8} />
+</span>

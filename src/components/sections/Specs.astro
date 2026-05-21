@@ -1,5 +1,7 @@
 ---
 import type { Product } from "../../data/product.ts";
+import SectionHeading from "../ui/SectionHeading.astro";
+import Icon from "../ui/Icon.astro";
 
 interface Props {
   product: Product;
@@ -8,13 +10,10 @@ const { product } = Astro.props;
 ---
 
 <section id="specs" data-reveal class="px-4 md:px-8 py-16 md:py-24 max-w-5xl mx-auto">
-  <div class="max-w-2xl mx-auto text-center mb-12 md:mb-16">
-    <p class="text-sm uppercase tracking-wider text-[--color-accent]">Thông số kỹ thuật</p>
-    <h2 class="mt-3 text-3xl md:text-4xl lg:text-5xl font-bold">Thông tin chi tiết</h2>
-    <p class="mt-4 text-[--color-muted]">
-      Giá trị bên dưới là placeholder. Thay bằng thông số thật của sản phẩm trong <code class="text-xs px-1.5 py-0.5 rounded bg-[--color-card]">src/data/product.ts</code>.
-    </p>
-  </div>
+  <SectionHeading label="Thông số kỹ thuật" title="Thông tin chi tiết">
+    Giá trị bên dưới là placeholder. Thay bằng thông số thật của sản phẩm trong
+    <code class="text-xs px-1.5 py-0.5 rounded bg-[--color-card]">src/data/product.ts</code>.
+  </SectionHeading>
 
   <!-- Desktop: table -->
   <table class="hidden md:table w-full border-separate border-spacing-0 rounded-xl overflow-hidden border border-[--color-border]">
@@ -38,7 +37,7 @@ const { product } = Astro.props;
     </tbody>
   </table>
 
-  <!-- Mobile: accordion via native <details> (no JS) -->
+  <!-- Mobile: native <details> accordion (no JS) -->
   <div data-stagger-parent class="md:hidden space-y-2">
     {product.specs.map((spec, i) => (
       <details
@@ -48,19 +47,7 @@ const { product } = Astro.props;
       >
         <summary class="flex items-center justify-between gap-3 px-4 py-4 cursor-pointer select-none font-semibold">
           <span>{spec.label}</span>
-          <svg
-            class="w-5 h-5 text-[--color-muted] transition-transform duration-200 group-open:rotate-180"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            aria-hidden="true"
-          >
-            <polyline points="6 9 12 15 18 9"></polyline>
-          </svg>
+          <Icon name="chevron-down" size={20} class="text-[--color-muted] transition-transform duration-200 group-open:rotate-180" />
         </summary>
         <p class="px-4 pb-4 text-[--color-muted]">{spec.value}</p>
       </details>

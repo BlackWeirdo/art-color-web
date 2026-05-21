@@ -1,45 +1,12 @@
 ---
-// 4-step service timeline. Numbered circles connected by a horizontal line
-// on desktop, stack vertically on mobile.
-
-interface ServiceStep {
-  title: string;
-  desc: string;
-}
-
-const steps: ServiceStep[] = [
-  {
-    title: 'Tìm hiểu\n& Khảo sát',
-    desc: 'Bắt đầu từ không gian, đối tượng sử dụng và tầm nhìn của bạn — thu thập mọi thông tin cần thiết để thiết kế giải pháp phù hợp.',
-  },
-  {
-    title: 'Concept\n& Thiết kế',
-    desc: 'Đội ngũ phát triển concept không gian, lựa chọn thiết bị, layout và luồng vận hành — tối ưu cho brand của bạn.',
-  },
-  {
-    title: 'Cung cấp\n& Lắp đặt',
-    desc: 'Procure và lắp đặt thiết bị với độ chính xác cao. Mọi brand chúng tôi phân phối đều có chứng nhận toàn cầu.',
-  },
-  {
-    title: 'Đào tạo\n& Hỗ trợ',
-    desc: 'Đào tạo đội ngũ của bạn và cung cấp hỗ trợ liên tục — bảo trì, hướng dẫn nhân viên, thiết kế chương trình tập.',
-  },
-];
-
-const pad = (n: number) => String(n).padStart(2, '0');
+import { services } from "../../data/services.ts";
+import { pad2 } from "../../utils/format.ts";
 ---
 
-<section
-  id="services"
-  data-reveal
-  class="px-4 md:px-8 py-16 md:py-24 max-w-7xl mx-auto"
->
-  <!-- Header: 2-col on desktop (label/title left, ample whitespace right) -->
+<section id="services" data-reveal class="px-4 md:px-8 py-16 md:py-24 max-w-7xl mx-auto">
   <div class="grid md:grid-cols-2 gap-6 md:gap-12 mb-14 md:mb-20">
     <div>
-      <p class="text-sm uppercase tracking-[0.2em] text-[--color-accent] font-semibold">
-        Dịch vụ
-      </p>
+      <p class="text-sm uppercase tracking-[0.2em] text-[--color-accent] font-semibold">Dịch vụ</p>
       <h2 class="font-serif mt-3 text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight leading-[1.15]">
         Đồng hành liền mạch<br />
         từ <em class="italic font-normal text-[--color-accent]">tầm nhìn đến hiện thực.</em>
@@ -47,25 +14,15 @@ const pad = (n: number) => String(n).padStart(2, '0');
     </div>
   </div>
 
-  <!-- 4-step timeline -->
-  <div
-    data-stagger-parent
-    class="relative grid grid-cols-1 md:grid-cols-4 gap-y-10 md:gap-y-0 gap-x-6 md:gap-x-8"
-  >
+  <div data-stagger-parent class="relative grid grid-cols-1 md:grid-cols-4 gap-y-10 md:gap-y-0 gap-x-6 md:gap-x-8">
     <!-- Horizontal connecting line (desktop only, behind circles) -->
-    <div
-      class="hidden md:block absolute top-12 left-[12.5%] right-[12.5%] h-px bg-[--color-border]"
-      aria-hidden="true"
-    ></div>
+    <div class="hidden md:block absolute top-12 left-[12.5%] right-[12.5%] h-px bg-[--color-border]" aria-hidden="true"></div>
 
-    {steps.map((s, i) => (
+    {services.map((s, i) => (
       <div data-stagger-item class="relative flex flex-col items-center md:items-start text-center md:text-left">
-        <!-- Numbered circle with solid bg so line appears to pass behind -->
-        <div
-          class="relative z-10 w-24 h-24 rounded-full border-2 border-[--color-fg] grid place-items-center bg-[--color-bg]"
-        >
-          <span class="font-serif text-2xl md:text-3xl font-medium tracking-tight">
-            {pad(i + 1)}
+        <div class="relative z-10 w-24 h-24 rounded-full border-2 border-[--color-fg] grid place-items-center bg-[--color-bg]">
+          <span class="font-serif text-2xl md:text-3xl font-medium tracking-tight" aria-label={`Bước ${i + 1}`}>
+            {pad2(i + 1)}
           </span>
         </div>
 

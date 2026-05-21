@@ -1,5 +1,6 @@
 ---
 import type { Product } from "../../data/product.ts";
+import SectionHeading from "../ui/SectionHeading.astro";
 
 interface Props {
   product: Product;
@@ -9,13 +10,10 @@ const { mp4, webm, poster } = product.video;
 ---
 
 <section id="video" data-reveal class="px-4 md:px-8 py-16 md:py-24 max-w-5xl mx-auto">
-  <div class="max-w-2xl mx-auto text-center mb-10">
-    <p class="text-sm uppercase tracking-wider text-[--color-accent]">Video demo</p>
-    <h2 class="mt-3 text-3xl md:text-4xl lg:text-5xl font-bold">Xem sản phẩm trong hành động</h2>
-    <p class="mt-4 text-[--color-muted]">
-      Replace file rỗng trong <code class="text-xs px-1.5 py-0.5 rounded bg-[--color-card]">public/videos/</code> bằng video thật của bạn (MP4 + WebM optional + poster).
-    </p>
-  </div>
+  <SectionHeading label="Video demo" title="Xem sản phẩm trong hành động">
+    Replace file rỗng trong <code class="text-xs px-1.5 py-0.5 rounded bg-[--color-card]">public/videos/</code>
+    bằng video thật của bạn (MP4 + WebM optional + poster).
+  </SectionHeading>
 
   <div class="aspect-video rounded-2xl overflow-hidden bg-black ring-1 ring-[--color-border] shadow-2xl">
     <video

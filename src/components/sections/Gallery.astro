@@ -42,8 +42,8 @@ const { images, alt } = Astro.props;
     />
     <div
       data-gallery-zoom-lens
-      class="absolute pointer-events-none hidden border-2 border-[--color-accent] bg-white/15"
-      style="width:150px;height:150px;"
+      class="absolute pointer-events-none hidden border-2 border-[--color-accent]"
+      style="width:150px;height:150px;background-color:color-mix(in oklch, var(--color-fg) 15%, transparent);"
       aria-hidden="true"
     ></div>
   </div>
@@ -67,7 +67,7 @@ const { images, alt } = Astro.props;
     {images.map((src, i) => (
       <img
         src={src}
-        alt={i === 0 ? alt : ""}
+        alt={i === 0 ? alt : `${alt} — ảnh ${i + 1}`}
         loading={i === 0 ? "eager" : "lazy"}
         fetchpriority={i === 0 ? "high" : "auto"}
         class="shrink-0 w-full aspect-square object-cover snap-center"
@@ -76,7 +76,8 @@ const { images, alt } = Astro.props;
   </div>
   <span
     data-gallery-counter
-    class="absolute bottom-3 right-3 bg-black/60 text-white text-xs px-2 py-1 rounded-full"
+    class="absolute bottom-3 right-3 text-white text-xs px-2 py-1 rounded-full"
+    style="background-color: var(--overlay-medium);"
     aria-live="polite"
   >1 / {images.length}</span>
 </div>

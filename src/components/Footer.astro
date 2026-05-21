@@ -1,6 +1,5 @@
 ---
-import { products } from "../data/product.ts";
-const product = products[0]!;
+import { BRAND } from "../data/site.ts";
 import { contact } from "../data/contact.ts";
 
 const year = new Date().getFullYear();
@@ -47,7 +46,7 @@ const columns = [
             class="h-8 w-auto"
             onerror="this.style.display='none'"
           />
-          <p class="font-bold text-lg">{product.brand}</p>
+          <p class="font-bold text-lg">{BRAND}</p>
         </div>
         <p class="mt-3 text-sm text-[--color-muted] leading-relaxed">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit.
@@ -105,7 +104,7 @@ const columns = [
         </div>
       </div>
       <p class="text-xs text-[--color-muted]">
-        © {year} {product.brand}. Mọi quyền được bảo lưu.
+        © {year} {BRAND}. Mọi quyền được bảo lưu.
       </p>
     </div>
   </div>

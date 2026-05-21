@@ -67,13 +67,13 @@ export function initGallery() {
 
     wrap.addEventListener('mouseenter', show);
     wrap.addEventListener('mouseleave', hide);
+    const LENS_SIZE_PX = 150;
     wrap.addEventListener('mousemove', (event) => {
       const rect = wrap.getBoundingClientRect();
       const x = event.clientX - rect.left;
       const y = event.clientY - rect.top;
-      const lensSize = 150;
-      const lx = Math.max(0, Math.min(x - lensSize / 2, rect.width - lensSize));
-      const ly = Math.max(0, Math.min(y - lensSize / 2, rect.height - lensSize));
+      const lx = Math.max(0, Math.min(x - LENS_SIZE_PX / 2, rect.width - LENS_SIZE_PX));
+      const ly = Math.max(0, Math.min(y - LENS_SIZE_PX / 2, rect.height - LENS_SIZE_PX));
       lens.style.left = `${lx}px`;
       lens.style.top = `${ly}px`;
       panel.style.backgroundPosition = `${(x / rect.width) * 100}% ${(y / rect.height) * 100}%`;

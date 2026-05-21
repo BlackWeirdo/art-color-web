@@ -1,6 +1,8 @@
 ---
 import { products } from "../data/product.ts";
+import { BRAND } from "../data/site.ts";
 import ThemeToggle from "./ThemeToggle.astro";
+import Icon from "./ui/Icon.astro";
 
 interface Props {
   /** 'home' = catalog-style nav, 'product' = section anchors */
@@ -8,7 +10,7 @@ interface Props {
 }
 const { variant = 'product' } = Astro.props;
 
-const brand = products[0]?.brand ?? 'Art Color';
+const brand = BRAND;
 
 // Nav anchors are page-relative — they only resolve to sections that exist on
 // the current page. Home page surfaces Đối tác + Liên hệ, product pages surface

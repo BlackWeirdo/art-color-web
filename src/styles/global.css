@@ -3,29 +3,82 @@
 @variant dark (&:where(.dark, .dark *));
 
 /* ============================================================
- * Theme tokens — Black + Yellow industrial palette
- * Generic dark + safety-yellow accent (not tied to any brand).
- * Hue 80–95 = warm/yellow range; 240 = blue-gray (unused now).
+ * Design tokens — single source of truth.
+ *
+ * Naming convention:
+ *   --color-*       Tailwind-utility colors (bg-*, text-*, border-*).
+ *   --shadow-*      Box-shadow presets.
+ *   --duration-*    Animation timings.
+ *   --easing-*      Cubic-bezier curves.
+ *   --overlay-*     Translucent overlay colors (text on image, scrim).
+ *
+ * Hue 80–95 = warm/yellow range (industrial safety-yellow accent).
  * ============================================================ */
+
 @theme {
+  /* — Surfaces — */
   --color-bg: oklch(0.13 0.006 80);
   --color-fg: oklch(0.97 0.005 80);
   --color-card: oklch(0.18 0.008 80);
+
+  /* — Borders — */
   --color-border: oklch(0.30 0.012 80);
+
+  /* — Typography color — */
   --color-muted: oklch(0.68 0.012 80);
+
+  /* — Brand accent — */
   --color-accent: oklch(0.88 0.18 95);
   --color-accent-fg: oklch(0.14 0.012 80);
 
+  /* — Semantic state colors (used by toast / form feedback) — */
+  --color-success: oklch(0.72 0.15 145);
+  --color-success-fg: oklch(0.99 0.005 145);
+  --color-warning: oklch(0.78 0.16 70);
+  --color-warning-fg: oklch(0.14 0.012 70);
+  --color-danger: oklch(0.62 0.22 28);
+  --color-danger-fg: oklch(0.99 0.005 28);
+  --color-info: oklch(0.65 0.15 250);
+  --color-info-fg: oklch(0.99 0.005 250);
+
+  /* — Fonts — */
   --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --font-display: "Inter", system-ui, sans-serif;
   --font-serif: "Lora", "Source Serif Pro", Georgia, "Times New Roman", serif;
 }
 
 :root {
   color-scheme: dark;
+
+  /* — Non-utility design tokens (used via var() in custom CSS) — */
+  --surface-alt: oklch(0.97 0.012 88);
+  --on-surface-alt: oklch(0.13 0.012 80);
+  --border-surface-alt: oklch(0.84 0.012 80);
+
+  /* Overlays — translucent black for text-on-image scrims */
+  --overlay-strong: oklch(0 0 0 / 0.8);
+  --overlay-medium: oklch(0 0 0 / 0.4);
+  --overlay-soft: oklch(0 0 0 / 0.15);
+
+  /* Shadow presets — use --shadow-elevation-* for depth, --shadow-accent-glow for hover */
+  --shadow-sm: 0 1px 2px 0 oklch(0 0 0 / 0.18);
+  --shadow-md: 0 4px 12px -2px oklch(0 0 0 / 0.22);
+  --shadow-lg: 0 12px 32px -8px oklch(0 0 0 / 0.28);
+  --shadow-xl: 0 24px 60px -15px oklch(0 0 0 / 0.45);
+  --shadow-accent-glow: 0 10px 30px -10px color-mix(in oklch, var(--color-accent) 50%, transparent);
+
+  /* Motion timings + easings */
+  --duration-instant: 100ms;
+  --duration-fast: 200ms;
+  --duration-base: 300ms;
+  --duration-slow: 500ms;
+  --easing-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --easing-in: cubic-bezier(0.5, 0, 0.75, 0);
+  --easing-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Focus ring (consistent across all interactive elements) */
+  --focus-ring: 0 0 0 2px var(--color-bg), 0 0 0 4px var(--color-accent);
 }
 
-/* Light theme: white surface + golden accent (softer yellow for contrast on white) */
 :root.light {
   color-scheme: light;
   --color-bg: oklch(0.99 0.003 80);
@@ -35,21 +88,51 @@
   --color-muted: oklch(0.45 0.012 80);
   --color-accent: oklch(0.74 0.19 88);
   --color-accent-fg: oklch(0.14 0.012 80);
+
+  /* Light-mode shadows are subtler */
+  --shadow-sm: 0 1px 2px 0 oklch(0 0 0 / 0.06);
+  --shadow-md: 0 4px 12px -2px oklch(0 0 0 / 0.08);
+  --shadow-lg: 0 12px 32px -8px oklch(0 0 0 / 0.10);
+  --shadow-xl: 0 24px 60px -15px oklch(0 0 0 / 0.12);
 }
 
+/* ============================================================
+ * Base styles
+ * ============================================================ */
 html {
   background: var(--color-bg);
   color: var(--color-fg);
   font-family: var(--font-sans);
   scroll-behavior: smooth;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Smooth cross-element theme transition. Applied to ALL elements that
+ * commonly use theme-bound colors so the swap feels uniform, not jarring. */
+@media (prefers-reduced-motion: no-preference) {
+  html,
+  body,
+  header,
+  footer,
+  section,
+  article,
+  .card-lift,
+  [data-card] {
+    transition:
+      background-color var(--duration-base) var(--easing-out),
+      color var(--duration-base) var(--easing-out),
+      border-color var(--duration-base) var(--easing-out);
+  }
 }
 
 section {
   scroll-margin-top: 80px;
 }
 
-/* ---- Anti-FOUC for JS-driven animations -------------------------------- */
+/* ============================================================
+ * Anti-FOUC: JS-driven animations start hidden
+ * ============================================================ */
 .js [data-reveal],
 .js [data-stagger-item],
 .js [data-hero-meta],
@@ -68,9 +151,8 @@ section {
 .js [data-hero-tagline],
 .js [data-hero-price] { transform: translateY(16px); }
 .js [data-hero-gallery] { transform: scale(0.97); }
-/* feature-image/content initial transform is set inline by JS (depends on row index parity) */
 
-/* Reduced-motion fallback: never keep elements hidden */
+/* Reduced-motion: never keep elements hidden */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after {
@@ -91,47 +173,85 @@ section {
   }
 }
 
-/* ---- Sticky header ----------------------------------------------------- */
+/* ============================================================
+ * Sticky header
+ * ============================================================ */
 header[data-header] {
-  transition: background-color 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  transition:
+    background-color var(--duration-base) var(--easing-out),
+    box-shadow var(--duration-base) var(--easing-out),
+    border-color var(--duration-base) var(--easing-out);
 }
 header[data-header].scrolled {
   background-color: color-mix(in oklch, var(--color-bg) 92%, transparent);
-  box-shadow: 0 1px 14px rgba(0, 0, 0, 0.45);
+  box-shadow: var(--shadow-md);
 }
-:root.light header[data-header].scrolled {
-  box-shadow: 0 1px 14px rgba(0, 0, 0, 0.08);
+
+/* Header logo: persists across page navigations as a shared element */
+[data-header] a[href="/"] {
+  view-transition-name: site-logo;
 }
 
 [data-mobile-menu] {
   overflow: hidden;
 }
 
-/* ---- Native UI tweaks --------------------------------------------------- */
+/* ============================================================
+ * Native UI tweaks
+ * ============================================================ */
 summary::-webkit-details-marker { display: none; }
 summary { list-style: none; }
 
 [data-gallery-carousel]::-webkit-scrollbar { display: none; }
 [data-gallery-carousel] { scrollbar-width: none; }
 
-/* ---- Micro-interactions: press feedback -------------------------------- */
+/* ============================================================
+ * Focus ring — single source of truth for keyboard accessibility
+ * ============================================================ */
+:where(a, button, [role="button"], summary, input, select, textarea):focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+  border-radius: inherit;
+}
+
+/* Skip focus ring when focus came from mouse (only show for keyboard nav).
+ * `:focus-visible` already handles this — explicit `:focus:not(:focus-visible)`
+ * unset to silence default browser outline in WebKit. */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* ============================================================
+ * Reusable interactive utilities
+ * ============================================================ */
+
+/* Button-press: scale-down on active (touch + click feedback) */
 .btn-press {
-  transition: transform 0.15s ease, opacity 0.2s ease, background-color 0.2s ease;
+  transition:
+    transform var(--duration-fast) var(--easing-out),
+    opacity var(--duration-fast) var(--easing-out),
+    background-color var(--duration-fast) var(--easing-out),
+    box-shadow var(--duration-fast) var(--easing-out);
+  will-change: auto;
 }
 .btn-press:active {
   transform: scale(0.96);
+  transition-duration: var(--duration-instant);
 }
 
-/* Card hover lift with yellow glow */
+/* Card-lift: hover elevation with accent glow */
 .card-lift {
-  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  transition:
+    transform var(--duration-base) var(--easing-out),
+    border-color var(--duration-base) var(--easing-out),
+    box-shadow var(--duration-base) var(--easing-out);
 }
 .card-lift:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 30px -10px color-mix(in oklch, var(--color-accent) 50%, transparent);
+  box-shadow: var(--shadow-accent-glow);
 }
 
-/* Nav link underline from-left */
+/* Nav link underline animates from left on hover/focus */
 .nav-link {
   position: relative;
 }
@@ -143,24 +263,27 @@ summary { list-style: none; }
   height: 2px;
   width: 0%;
   background-color: var(--color-accent);
-  transition: width 0.25s ease;
+  transition: width var(--duration-base) var(--easing-out);
 }
 .nav-link:hover::after,
 .nav-link:focus-visible::after {
   width: 100%;
 }
 
-/* Gallery thumbs zoom-on-hover */
+/* Gallery thumbnails: zoom-on-hover */
 [data-gallery-thumb] img {
-  transition: transform 0.3s ease;
+  transition: transform var(--duration-base) var(--easing-out);
 }
 [data-gallery-thumb]:hover img {
   transform: scale(1.08);
 }
 
-/* Social/icon hover scale */
+/* Social/icon hover: subtle scale + rotate */
 .icon-hover {
-  transition: transform 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  transition:
+    transform var(--duration-fast) var(--easing-out),
+    color var(--duration-fast) var(--easing-out),
+    border-color var(--duration-fast) var(--easing-out);
 }
 .icon-hover:hover {
   transform: scale(1.08) rotate(-2deg);
@@ -171,24 +294,180 @@ summary { list-style: none; }
   transform-origin: center;
 }
 
-/* ---- Partners section — cream "light island" + yellow highlighter band -- */
-/* Local theme override: always cream bg / dark text / golden accent regardless
- * of page theme — matches the reference image style exactly. */
+/* ============================================================
+ * Image loading: skeleton shimmer
+ * Applied via JS `data-img-loading` toggle on parent wrapper.
+ * Pairs with <img onload="this.parentElement.dataset.imgLoading=''" />
+ * ============================================================ */
+[data-img-loading="true"]::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    var(--color-card) 0%,
+    color-mix(in oklch, var(--color-card) 60%, var(--color-fg) 5%) 50%,
+    var(--color-card) 100%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.4s ease-in-out infinite;
+  z-index: 1;
+}
+@keyframes skeleton-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-img-loading="true"]::before { animation: none; }
+}
+
+/* ============================================================
+ * Toast notification stack
+ * Container fixed top-right (desktop) / top-center (mobile).
+ * Each toast: slide-in from right + auto-dismiss.
+ * ============================================================ */
+[data-toast-container] {
+  position: fixed;
+  top: 5rem;
+  right: 1rem;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  max-width: calc(100vw - 2rem);
+  width: 22rem;
+  pointer-events: none;
+}
+@media (max-width: 640px) {
+  [data-toast-container] {
+    top: auto;
+    bottom: 5rem;
+    left: 1rem;
+    right: 1rem;
+    width: auto;
+  }
+}
+
+[data-toast] {
+  pointer-events: auto;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.875rem 1rem;
+  border-radius: 0.75rem;
+  background: var(--color-card);
+  color: var(--color-fg);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-lg);
+  font-size: 0.875rem;
+  font-weight: 500;
+  animation: toast-in var(--duration-base) var(--easing-out);
+}
+[data-toast].is-dismissing {
+  animation: toast-out var(--duration-fast) var(--easing-in) forwards;
+}
+[data-toast][data-variant="success"] { border-left: 4px solid var(--color-success); }
+[data-toast][data-variant="warning"] { border-left: 4px solid var(--color-warning); }
+[data-toast][data-variant="danger"]  { border-left: 4px solid var(--color-danger); }
+[data-toast][data-variant="info"]    { border-left: 4px solid var(--color-info); }
+
+[data-toast] .toast-icon {
+  flex-shrink: 0;
+  width: 1.25rem;
+  height: 1.25rem;
+}
+[data-toast][data-variant="success"] .toast-icon { color: var(--color-success); }
+[data-toast][data-variant="warning"] .toast-icon { color: var(--color-warning); }
+[data-toast][data-variant="danger"]  .toast-icon { color: var(--color-danger); }
+[data-toast][data-variant="info"]    .toast-icon { color: var(--color-info); }
+
+[data-toast] .toast-message {
+  flex: 1;
+  line-height: 1.4;
+}
+
+[data-toast] .toast-close {
+  flex-shrink: 0;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-left: 0.25rem;
+  opacity: 0.6;
+  transition: opacity var(--duration-fast) var(--easing-out);
+  cursor: pointer;
+  background: none;
+  border: 0;
+  color: inherit;
+}
+[data-toast] .toast-close:hover { opacity: 1; }
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translateX(20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes toast-out {
+  from { opacity: 1; transform: translateX(0); }
+  to   { opacity: 0; transform: translateX(20px); }
+}
+@media (max-width: 640px) {
+  @keyframes toast-in {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes toast-out {
+    from { opacity: 1; transform: translateY(0); }
+    to   { opacity: 0; transform: translateY(20px); }
+  }
+}
+
+/* ============================================================
+ * Top page-loading bar (used by view transitions)
+ * ============================================================ */
+[data-route-progress] {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 0%;
+  background: var(--color-accent);
+  z-index: 200;
+  transition: width var(--duration-slow) var(--easing-out), opacity var(--duration-fast);
+  box-shadow: 0 0 8px var(--color-accent);
+  pointer-events: none;
+}
+[data-route-progress][data-active="true"]  { opacity: 1; width: 90%; }
+[data-route-progress][data-active="done"]  { width: 100%; opacity: 0; }
+
+/* ============================================================
+ * View transitions — smooth page-to-page animations
+ * ============================================================ */
+@view-transition {
+  navigation: auto;
+}
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: var(--duration-base);
+  animation-timing-function: var(--easing-out);
+}
+@media (prefers-reduced-motion: reduce) {
+  @view-transition {
+    navigation: none;
+  }
+}
+
+/* ============================================================
+ * Partners section — cream "light island" + yellow text outline
+ * Local theme override uses semantic surface-alt tokens.
+ * ============================================================ */
 #partners {
-  --color-bg: oklch(0.97 0.012 88);
-  --color-fg: oklch(0.13 0.012 80);
+  --color-bg: var(--surface-alt);
+  --color-fg: var(--on-surface-alt);
   --color-accent: oklch(0.83 0.18 92);
   --color-muted: oklch(0.42 0.012 80);
-  --color-border: oklch(0.84 0.012 80);
+  --color-border: var(--border-surface-alt);
   background: var(--color-bg);
   color: var(--color-fg);
 }
 
-/* Black text with thick yellow outline that hugs each letter's contour.
- * -webkit-text-stroke draws a stroke along the letter path. Combined with
- * paint-order: stroke fill, the fill (black) paints on top of the stroke,
- * leaving only the OUTSIDE half of the stroke visible → looks like a border
- * around the letterform, with the letter staying its natural width. */
 .partner-category {
   color: #000;
   letter-spacing: -0.02em;
@@ -203,20 +482,20 @@ summary { list-style: none; }
   }
 }
 
-/* Span wrapper per line: just inline-block neutral, no gradient anymore */
 .partner-category > .line {
   display: inline-block;
 }
 
 .partner-item {
-  transition: transform 0.2s ease;
+  transition: transform var(--duration-fast) var(--easing-out);
 }
 .partner-item:hover {
   transform: translateY(-2px);
 }
 
-/* ---- Feature scroll sections ------------------------------------------- */
-/* Large editorial numeral on each row */
+/* ============================================================
+ * Feature scroll sections — large editorial numeral
+ * ============================================================ */
 .feature-numeral {
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.05em;
@@ -227,4 +506,16 @@ summary { list-style: none; }
   background-clip: text;
   color: transparent;
   line-height: 0.85;
+}
+
+/* ============================================================
+ * Responsive: ultra-wide max-width on main containers
+ * Prevents content stretching on >1920px monitors.
+ * ============================================================ */
+@media (min-width: 1920px) {
+  main > section > .max-w-7xl,
+  main > section.max-w-7xl,
+  main > div > .max-w-7xl {
+    max-width: 88rem; /* 1408px hard cap */
+  }
 }

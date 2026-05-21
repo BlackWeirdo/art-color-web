@@ -1,7 +1,10 @@
 ---
+import { ClientRouter } from "astro:transitions";
 import "../styles/global.css";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
+import ToastContainer from "../components/ui/ToastContainer.astro";
+import { BRAND, SITE_URL } from "../data/site.ts";
 
 interface Props {
   title: string;
@@ -13,12 +16,13 @@ interface Props {
 
 const {
   title,
-  description = 'Product detail page template (Astro + Tailwind v4 + Motion One).',
+  description = `${BRAND} — Phân phối thiết bị fitness Technogym chính hãng tại Việt Nam.`,
+  // TODO: replace /og-image.png with a real 1200×630 PNG before social sharing
   ogImage = '/og-image.png',
   headerVariant = 'product',
 } = Astro.props;
 
-const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? 'https://example.com');
+const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? SITE_URL);
 ---
 
 <!doctype html>
@@ -47,6 +51,8 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? 'https://example.
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalURL} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
 
     <!-- Lora: serif font with proper Vietnamese subset (Latin diacritics render correctly) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -61,9 +67,15 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? 'https://example.
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:image" content={new URL(ogImage, canonicalURL)} />
+    <meta property="og:site_name" content={BRAND} />
+    <meta property="og:locale" content="vi_VN" />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="robots" content="index, follow" />
 
     <slot name="head" />
+
+    <!-- Astro View Transitions: SPA-like smooth page navigation -->
+    <ClientRouter />
   </head>
   <body class="min-h-screen bg-[--color-bg] text-[--color-fg] antialiased">
     <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:px-4 focus:py-2 focus:bg-[--color-accent] focus:text-[--color-accent-fg] focus:rounded">
@@ -74,12 +86,25 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? 'https://example.
       <slot />
     </main>
     <Footer />
+    <ToastContainer />
 
     <script>
       import { initThemeToggle } from "../scripts/theme.ts";
       import { initAnimations } from "../scripts/animations.ts";
-      initThemeToggle();
-      initAnimations();
+      import { initRouteProgress } from "../scripts/routeProgress.ts";
+
+      function bootClient() {
+        initThemeToggle();
+        initAnimations();
+      }
+
+      // Initial page load
+      bootClient();
+      initRouteProgress();
+
+      // Re-init after view transitions swap (animations + theme handlers attach
+      // to elements that get replaced when navigating between pages)
+      document.addEventListener('astro:page-load', bootClient);
     </script>
   </body>
 </html>

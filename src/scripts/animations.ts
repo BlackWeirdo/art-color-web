@@ -4,10 +4,11 @@
 
 import { animate, inView, scroll, stagger } from 'motion';
 
-type EaseOut = [number, number, number, number];
+/** Cubic-bezier easing curve in motion's [x1, y1, x2, y2] tuple form. */
+type CubicBezier = [number, number, number, number];
 
-const EASE_OUT_QUART: EaseOut = [0.22, 1, 0.36, 1];
-const EASE_IN_QUART: EaseOut = [0.5, 0, 0.75, 0];
+const EASE_OUT_QUART: CubicBezier = [0.22, 1, 0.36, 1];
+const EASE_IN_QUART: CubicBezier = [0.5, 0, 0.75, 0];
 
 const reducedMotion =
   typeof window !== 'undefined' &&
@@ -30,7 +31,6 @@ export function initAnimations() {
   // Mobile menu + theme icon work even with reduced motion (without animation).
   setupMenuDrawer();
   setupThemeIconAnim();
-  setupCustomThemeButton();
 
   if (reducedMotion) {
     unhideAll();
@@ -71,16 +71,29 @@ function heroEntrance() {
 
 function heroParallax() {
   const gallery = document.querySelector<HTMLElement>('[data-hero-gallery]');
-  if (!gallery) return;
+  const hero = document.querySelector<HTMLElement>('[data-hero]');
+  if (!gallery || !hero) return;
 
-  scroll((_progress, info) => {
-    const offset = Math.max(0, info.y.current * 0.12);
-    gallery.style.setProperty('--parallax-y', `${offset}px`);
-  });
-
-  // Apply via CSS variable so it doesn't fight `motion`'s transform during entrance.
+  // Apply via CSS variable so it doesn't fight motion's transform during entrance.
   gallery.style.transform = `translateY(var(--parallax-y, 0px))`;
-  gallery.style.willChange = 'transform';
+
+  // Only attach the scroll listener + GPU promotion while the hero is on-screen.
+  // Saves both compute and GPU memory once the user scrolls past it.
+  let cleanup: (() => void) | null = null;
+  const observer = new IntersectionObserver(([entry]) => {
+    if (entry.isIntersecting) {
+      gallery.style.willChange = 'transform';
+      cleanup = scroll((_progress, info) => {
+        const offset = Math.max(0, info.y.current * 0.12);
+        gallery.style.setProperty('--parallax-y', `${offset}px`);
+      });
+    } else {
+      gallery.style.willChange = '';
+      cleanup?.();
+      cleanup = null;
+    }
+  });
+  observer.observe(hero);
 }
 
 // ---- Sticky header state ---------------------------------------------------
@@ -296,7 +309,3 @@ function setupThemeIconAnim() {
   });
 }
 
-// Reserved for future buttons that need extra love (currently no-op).
-function setupCustomThemeButton() {
-  // Placeholder hook — keeps the API surface stable for next phases.
-}

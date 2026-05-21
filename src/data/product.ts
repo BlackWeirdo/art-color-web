@@ -4,10 +4,12 @@
 // IP NOTE: Do NOT copy brand names, prices, spec values, or images from any
 // third-party site. Use only your own product info or Lorem Ipsum placeholders.
 
+import { BRAND } from './site.ts';
+
 export interface ProductFeature {
   title: string;
-  desc: string;
-  body?: string;
+  /** Long-form paragraph displayed in the scroll-section feature row. */
+  body: string;
   icon: 'spark' | 'route' | 'music' | 'pulse' | 'shield';
   image: string;
 }
@@ -39,41 +41,34 @@ export interface Product {
   video: ProductVideo;
 }
 
-const BRAND = 'Art Color';
-
 // Shared placeholder content — replace per-product when you have real data.
 const COMMON_FEATURES: ProductFeature[] = [
   {
     title: 'Huấn luyện cá nhân hoá',
-    desc: 'Mô tả ngắn placeholder lorem ipsum.',
     body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phù hợp cho mọi cấp độ tập luyện, từ người mới bắt đầu đến vận động viên chuyên nghiệp.',
     icon: 'spark',
     image: 'https://picsum.photos/seed/feat-power/1200/900',
   },
   {
     title: 'Lộ trình toàn cầu',
-    desc: 'Mô tả ngắn placeholder lorem ipsum.',
     body: 'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Khám phá hàng nghìn lộ trình mô phỏng đường nổi tiếng thế giới.',
     icon: 'route',
     image: 'https://picsum.photos/seed/feat-route/1200/900',
   },
   {
     title: 'Âm nhạc đồng bộ nhịp tim',
-    desc: 'Mô tả ngắn placeholder lorem ipsum.',
     body: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris. Hệ thống AI phân tích nhịp tim thời gian thực và chọn nhạc theo BPM phù hợp.',
     icon: 'music',
     image: 'https://picsum.photos/seed/feat-music/1200/900',
   },
   {
     title: 'Theo dõi sinh trắc học',
-    desc: 'Mô tả ngắn placeholder lorem ipsum.',
     body: 'Duis aute irure dolor in reprehenderit in voluptate velit esse. Cảm biến đo nhịp tim, oxy máu, calo và áp lực mỗi bước.',
     icon: 'pulse',
     image: 'https://picsum.photos/seed/feat-pulse/1200/900',
   },
   {
     title: 'An toàn vận hành',
-    desc: 'Mô tả ngắn placeholder lorem ipsum.',
     body: 'Excepteur sint occaecat cupidatat non proident. Khung kết cấu thép cường lực, cảm biến dừng khẩn cấp tự động, bảo hành toàn diện nhiều năm.',
     icon: 'shield',
     image: 'https://picsum.photos/seed/feat-shield/1200/900',
@@ -149,7 +144,3 @@ export const products: Product[] = [
 export function getProduct(slug: string): Product | undefined {
   return products.find((p) => p.slug === slug);
 }
-
-// Legacy default export — first product. Components migrating to prop-based
-// receive this from index.astro / [slug].astro instead of importing directly.
-export const product: Product = products[0]!;
