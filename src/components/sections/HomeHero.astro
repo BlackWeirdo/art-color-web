@@ -1,77 +1,84 @@
 ---
-import { products } from "../../data/product.ts";
-import { BRAND } from "../../data/site.ts";
 import CtaButton from "../ui/CtaButton.astro";
-
-const featured = products.slice(0, 4);
 ---
 
-<section id="hero" data-hero class="px-4 md:px-8 pt-10 md:pt-20 pb-16 md:pb-24 max-w-7xl mx-auto">
-  <div class="grid md:grid-cols-2 gap-10 lg:gap-16 items-center">
-    <div>
-      <p data-hero-meta class="inline-flex items-center gap-2 text-xs md:text-sm uppercase tracking-[0.2em] text-[--color-accent] font-semibold">
-        <span class="inline-block w-8 h-px bg-[--color-accent]"></span>
-        Phân phối Technogym chính hãng
-      </p>
+<section
+  id="hero"
+  data-hero
+  class="relative w-full h-screen min-h-[100dvh] -mt-16 overflow-hidden"
+>
+  <video
+    class="absolute inset-0 w-full h-full object-cover"
+    autoplay
+    muted
+    loop
+    playsinline
+    preload="metadata"
+    poster="/videos/hero-poster.jpg"
+    aria-hidden="true"
+    transition:persist
+  >
+    <source src="/videos/hero-bg.webm" type="video/webm" />
+    <source src="/videos/hero-bg.mp4" type="video/mp4" />
+  </video>
 
-      <h1 data-hero-title class="mt-5 text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black tracking-tight leading-[1.05]">
-        Sống khỏe<br />
-        từng ngày<br />
-        cùng <span class="text-[--color-accent]">{BRAND}</span>
-      </h1>
+  <div
+    class="absolute inset-0 bg-[var(--overlay-medium)]"
+    aria-hidden="true"
+  ></div>
+  <div
+    class="absolute inset-0 bg-linear-to-b from-[var(--overlay-soft)] via-transparent to-[var(--overlay-strong)]"
+    aria-hidden="true"
+  ></div>
 
-      <p data-hero-tagline class="mt-6 text-lg md:text-xl text-[--color-muted] leading-relaxed max-w-prose">
-        Thiết bị fitness cao cấp dành cho gia đình, phòng tập chuyên nghiệp và doanh nghiệp.
-        Tư vấn lắp đặt, vận hành và bảo hành tận tâm.
-      </p>
-
-      <div data-hero-price class="mt-8 md:mt-10 flex flex-wrap gap-3">
-        <CtaButton href="#products">Khám phá sản phẩm</CtaButton>
-        <CtaButton href="#contact" variant="outline" arrow={false}>Liên hệ tư vấn</CtaButton>
-      </div>
+  <div
+    class="relative z-10 flex h-full w-full flex-col items-center justify-center px-4 pt-16 pb-12 text-center text-white md:px-8"
+  >
+    <div data-hero-logo class="flex items-center gap-5 md:gap-7 mb-7 md:mb-9">
+      <img
+        src="/logos/art-color.png"
+        alt="Art Color"
+        class="h-12 md:h-16 w-auto drop-shadow-[0_2px_8px_rgba(0,0,0,0.45)]"
+        onerror="this.style.display='none'"
+      />
+      <span class="h-10 md:h-12 w-px bg-white/40" aria-hidden="true"></span>
+      <img
+        src="/logos/technogym.png"
+        alt="Technogym"
+        class="h-9 md:h-12 w-auto drop-shadow-[0_2px_8px_rgba(0,0,0,0.45)]"
+        onerror="this.style.display='none'"
+      />
     </div>
 
-    <div data-hero-gallery class="hidden md:block">
-      <div class="grid grid-cols-2 gap-3 md:gap-4">
-        {featured.map((p, i) => (
-          <a
-            href={`/san-pham/${p.slug}/`}
-            class:list={[
-              "group relative aspect-square rounded-2xl overflow-hidden ring-1 ring-[--color-border] hover:ring-[--color-accent] transition-all shadow-lg",
-              i === 1 && "translate-y-6 md:translate-y-10",
-              i === 2 && "-translate-y-6 md:-translate-y-10",
-            ]}
-          >
-            <img
-              src={p.images[0]}
-              alt={p.name}
-              loading={i === 0 ? "eager" : "lazy"}
-              fetchpriority={i === 0 ? "high" : "auto"}
-              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-            />
-            <div class="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-[var(--overlay-strong)] via-[color-mix(in_oklch,var(--overlay-strong)_40%,transparent)] to-transparent">
-              <p class="text-xs font-semibold text-white">{p.name}</p>
-            </div>
-          </a>
-        ))}
-      </div>
-    </div>
+    <p
+      data-hero-meta
+      class="inline-flex items-center gap-2 text-xs md:text-sm uppercase tracking-[0.3em] text-white/85 font-semibold"
+    >
+      <span class="inline-block w-8 h-px bg-white/60"></span>
+      Phân phối Technogym chính hãng
+    </p>
 
-    <div class="md:hidden grid grid-cols-2 gap-3">
-      {featured.slice(0, 2).map((p, i) => (
-        <a
-          href={`/san-pham/${p.slug}/`}
-          class="block aspect-square rounded-xl overflow-hidden ring-1 ring-[--color-border] hover:ring-[--color-accent] transition-all"
-        >
-          <img
-            src={p.images[0]}
-            alt={p.name}
-            loading={i === 0 ? "eager" : "lazy"}
-            fetchpriority={i === 0 ? "high" : "auto"}
-            class="w-full h-full object-cover"
-          />
-        </a>
-      ))}
+    <h1
+      data-hero-title
+      class="mt-5 text-5xl md:text-7xl lg:text-8xl font-black tracking-tight leading-[0.95] drop-shadow-[0_4px_24px_rgba(0,0,0,0.55)]"
+    >
+      Wellness Living
+    </h1>
+
+    <p
+      data-hero-tagline
+      class="mt-6 max-w-2xl text-base md:text-lg lg:text-xl text-white/85 leading-relaxed"
+    >
+      Thiết bị fitness cao cấp cho gia đình, phòng tập chuyên nghiệp và doanh nghiệp.
+      Tư vấn lắp đặt, vận hành và bảo hành tận tâm.
+    </p>
+
+    <div
+      data-hero-price
+      class="mt-8 md:mt-10 flex flex-wrap justify-center gap-3"
+    >
+      <CtaButton href="#products">Khám phá sản phẩm</CtaButton>
+      <CtaButton href="#contact" variant="outline" arrow={false}>Liên hệ tư vấn</CtaButton>
     </div>
   </div>
 </section>

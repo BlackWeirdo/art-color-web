@@ -136,7 +136,7 @@ section {
 .js [data-reveal],
 .js [data-stagger-item],
 .js [data-hero-meta],
-.js [data-hero-gallery],
+.js [data-hero-logo],
 .js [data-hero-title],
 .js [data-hero-tagline],
 .js [data-hero-price],
@@ -147,10 +147,10 @@ section {
 .js [data-reveal] { transform: translateY(24px); }
 .js [data-stagger-item] { transform: translateY(22px); }
 .js [data-hero-meta] { transform: translateY(-8px); }
+.js [data-hero-logo] { transform: translateY(-12px); }
 .js [data-hero-title],
 .js [data-hero-tagline],
 .js [data-hero-price] { transform: translateY(16px); }
-.js [data-hero-gallery] { transform: scale(0.97); }
 
 /* Reduced-motion: never keep elements hidden */
 @media (prefers-reduced-motion: reduce) {
@@ -162,7 +162,7 @@ section {
   .js [data-reveal],
   .js [data-stagger-item],
   .js [data-hero-meta],
-  .js [data-hero-gallery],
+  .js [data-hero-logo],
   .js [data-hero-title],
   .js [data-hero-tagline],
   .js [data-hero-price],
@@ -175,16 +175,34 @@ section {
 
 /* ============================================================
  * Sticky header
+ *
+ * Default rendering = solid translucent surface + bottom border (used on
+ * product/inner pages). The home page hero overlays a full-bleed video and
+ * needs a fully transparent header until the user scrolls past 24px — gated
+ * via `body[data-page="home"]` so PDP styling is untouched.
+ *
+ * `.scrolled` is toggled by stickyHeaderProgress() in animations.ts at scroll
+ * top > 24px and always renders the solid state.
  * ============================================================ */
 header[data-header] {
+  background-color: color-mix(in oklch, var(--color-bg) 85%, transparent);
+  border-bottom: 1px solid var(--color-border);
+  backdrop-filter: blur(8px);
   transition:
     background-color var(--duration-base) var(--easing-out),
     box-shadow var(--duration-base) var(--easing-out),
-    border-color var(--duration-base) var(--easing-out);
+    border-color var(--duration-base) var(--easing-out),
+    backdrop-filter var(--duration-base) var(--easing-out);
 }
 header[data-header].scrolled {
   background-color: color-mix(in oklch, var(--color-bg) 92%, transparent);
   box-shadow: var(--shadow-md);
+}
+
+body[data-page="home"] header[data-header]:not(.scrolled) {
+  background-color: transparent;
+  border-bottom-color: transparent;
+  backdrop-filter: none;
 }
 
 /* Header logo: persists across page navigations as a shared element */

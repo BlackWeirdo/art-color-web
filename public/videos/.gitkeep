@@ -1,3 +1,19 @@
-# User-supplied product demo video goes here.
-# Recommended: 30-60s demo, 720p, H.264 MP4 (<20MB) + VP9 WebM optional + poster JPG.
-# Reference from src/data/product.ts → video field.
+# Video assets for the homepage hero + product demo.
+#
+# Required filenames (case-sensitive — Cloudflare/Linux):
+#
+# 1. hero-bg.mp4       Homepage hero background (H.264 baseline, 1920x1080, 24-30fps,
+#                      2.5-4 Mbps VBR, 10-20s seamless loop, target ≤ 8 MB).
+# 2. hero-bg.webm      Optional smaller alternative (VP9, same dimensions,
+#                      1.5-2.5 Mbps, target ≤ 5 MB). Listed first in <source>
+#                      ordering so browsers prefer it.
+# 3. hero-poster.jpg   First/representative frame (1920x1080 JPEG q75,
+#                      150-300 KB). REQUIRED — iOS Safari does not paint the
+#                      first video frame until decode, so without a poster the
+#                      hero shows a black box for ~500ms.
+#
+# HTML attributes used: muted autoplay loop playsinline preload="metadata"
+# All attributes are mandatory for iOS Safari muted autoplay.
+#
+# Product demo video (referenced from src/data/product.ts → video field):
+#   30-60s demo, 720p, H.264 MP4 (<20MB) + VP9 WebM optional + poster JPG.

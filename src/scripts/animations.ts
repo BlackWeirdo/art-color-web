@@ -1,6 +1,6 @@
 // Unified animation entry point using `motion` (vanilla edition of Framer Motion).
-// Covers: hero entrance, scroll parallax, sticky header, section reveals,
-// stagger children, mobile menu drawer, theme icon spin.
+// Covers: hero entrance, sticky header, section reveals, stagger children,
+// mobile menu drawer, theme icon spin.
 
 import { animate, inView, scroll, stagger } from 'motion';
 
@@ -17,7 +17,7 @@ const reducedMotion =
 function unhideAll() {
   document
     .querySelectorAll<HTMLElement>(
-      '[data-reveal], [data-stagger-item], [data-hero-meta], [data-hero-gallery], [data-hero-title], [data-hero-tagline], [data-hero-price], [data-feature-image], [data-feature-content]',
+      '[data-reveal], [data-stagger-item], [data-hero-meta], [data-hero-logo], [data-hero-title], [data-hero-tagline], [data-hero-price], [data-feature-image], [data-feature-content]',
     )
     .forEach((el) => {
       el.style.opacity = '1';
@@ -32,14 +32,17 @@ export function initAnimations() {
   setupMenuDrawer();
   setupThemeIconAnim();
 
+  // Header `.scrolled` class toggle is not an animation — it MUST run even
+  // under prefers-reduced-motion so the transparent-over-hero state still
+  // resolves to a solid surface for accessibility users.
+  stickyHeaderProgress();
+
   if (reducedMotion) {
     unhideAll();
     return;
   }
 
   heroEntrance();
-  heroParallax();
-  stickyHeaderProgress();
   sectionReveals();
   staggerChildren();
   featureRowReveals();
@@ -48,52 +51,23 @@ export function initAnimations() {
 // ---- Hero entrance ---------------------------------------------------------
 
 function heroEntrance() {
-  const items: Array<{ sel: string; y?: number; scale?: number; delay: number }> = [
-    { sel: '[data-hero-meta]', y: -8, delay: 0.05 },
-    { sel: '[data-hero-gallery]', scale: 0.97, delay: 0.1 },
-    { sel: '[data-hero-title]', y: 18, delay: 0.18 },
-    { sel: '[data-hero-tagline]', y: 14, delay: 0.28 },
-    { sel: '[data-hero-price]', y: 16, delay: 0.38 },
+  const items: Array<{ sel: string; y: number; delay: number }> = [
+    { sel: '[data-hero-logo]', y: -12, delay: 0.05 },
+    { sel: '[data-hero-meta]', y: -8, delay: 0.15 },
+    { sel: '[data-hero-title]', y: 18, delay: 0.25 },
+    { sel: '[data-hero-tagline]', y: 14, delay: 0.35 },
+    { sel: '[data-hero-price]', y: 16, delay: 0.45 },
   ];
 
-  items.forEach(({ sel, y = 0, scale = 1, delay }) => {
+  items.forEach(({ sel, y, delay }) => {
     const el = document.querySelector<HTMLElement>(sel);
     if (!el) return;
     animate(
       el,
-      { opacity: [0, 1], y: [y, 0], scale: [scale, 1] },
+      { opacity: [0, 1], y: [y, 0] },
       { duration: 0.75, delay, ease: EASE_OUT_QUART },
     );
   });
-}
-
-// ---- Hero scroll parallax --------------------------------------------------
-
-function heroParallax() {
-  const gallery = document.querySelector<HTMLElement>('[data-hero-gallery]');
-  const hero = document.querySelector<HTMLElement>('[data-hero]');
-  if (!gallery || !hero) return;
-
-  // Apply via CSS variable so it doesn't fight motion's transform during entrance.
-  gallery.style.transform = `translateY(var(--parallax-y, 0px))`;
-
-  // Only attach the scroll listener + GPU promotion while the hero is on-screen.
-  // Saves both compute and GPU memory once the user scrolls past it.
-  let cleanup: (() => void) | null = null;
-  const observer = new IntersectionObserver(([entry]) => {
-    if (entry.isIntersecting) {
-      gallery.style.willChange = 'transform';
-      cleanup = scroll((_progress, info) => {
-        const offset = Math.max(0, info.y.current * 0.12);
-        gallery.style.setProperty('--parallax-y', `${offset}px`);
-      });
-    } else {
-      gallery.style.willChange = '';
-      cleanup?.();
-      cleanup = null;
-    }
-  });
-  observer.observe(hero);
 }
 
 // ---- Sticky header state ---------------------------------------------------

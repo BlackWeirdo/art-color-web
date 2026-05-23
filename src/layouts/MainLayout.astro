@@ -23,6 +23,10 @@ const {
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? SITE_URL);
+
+// `data-page` drives page-scoped CSS (e.g. transparent header over the home
+// hero video). Anything other than "/" gets the default inner-page styling.
+const pageKind = Astro.url.pathname === '/' ? 'home' : 'inner';
 ---
 
 <!doctype html>
@@ -54,11 +58,13 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? SITE_URL);
     <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)" />
     <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
 
-    <!-- Lora: serif font with proper Vietnamese subset (Latin diacritics render correctly) -->
+    <!-- Inter: sans-serif headings + body. Lora: serif accents.
+         Both ship Vietnamese diacritics via the `vietnamese` subset Google Fonts
+         picks up automatically when the `lang="vi"` document requests them. -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Lora:ital,wght@0,400..700;1,400..700&display=swap"
       rel="stylesheet"
     />
 
@@ -77,7 +83,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? SITE_URL);
     <!-- Astro View Transitions: SPA-like smooth page navigation -->
     <ClientRouter />
   </head>
-  <body class="min-h-screen bg-[--color-bg] text-[--color-fg] antialiased">
+  <body data-page={pageKind} class="min-h-screen bg-[--color-bg] text-[--color-fg] antialiased">
     <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:px-4 focus:py-2 focus:bg-[--color-accent] focus:text-[--color-accent-fg] focus:rounded">
       Bỏ qua tới nội dung chính
     </a>
