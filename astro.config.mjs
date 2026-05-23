@@ -3,6 +3,8 @@ import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 import sitemap from '@astrojs/sitemap';
 
+import cloudflare from "@astrojs/cloudflare";
+
 // https://astro.build/config
 // TODO: replace `site` with the real production domain before deploy.
 // This value is used for sitemap, canonical URLs, and absolute og:image URLs.
@@ -10,7 +12,10 @@ import sitemap from '@astrojs/sitemap';
 export default defineConfig({
   site: 'https://example.com',
   integrations: [sitemap()],
+
   vite: {
     plugins: [tailwindcss()],
   },
+
+  adapter: cloudflare()
 });

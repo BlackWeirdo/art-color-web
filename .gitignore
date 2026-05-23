@@ -42,3 +42,6 @@ desktop.ini
 # Test / coverage output
 coverage/
 *.lcov
+
+.dev.vars*
+!.dev.vars.example
